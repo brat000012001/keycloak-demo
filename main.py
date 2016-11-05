@@ -13,8 +13,8 @@ if __name__ == "__main__":
     authentication_method = ClientCredentialsApi(
         client_id='service-account-client',client_secret='9e853caa-9956-4505-9299-4dd83bd0069b')
 
-    # authentication_method = ResourceOwnerCredentialsAuthentication('pnalyvayko@agi.com.com',
-    # 'intrepid','loopback-client')
+    # authentication_method = ResourceOwnerCredentialsAuthentication('<username | email>',
+    # '<user password>','loopback-client')
 
     response = authentication_method.authenticate(kc)
 
