@@ -3,6 +3,7 @@ from utils import ResourceOwnerCredentialsAuthentication
 from utils import ClientCredentialsApi
 from utils import JwtToken
 from admin.users import RealmUsers
+from admin.events import AdminEvents
 
 if __name__ == "__main__":
     kc = KeycloakInstance(server='online.stk.com',ssl_required=True)
@@ -37,4 +38,7 @@ if __name__ == "__main__":
     list_of_users = users.get_users_summary(kc)
     print('\n'.join([str(d) for d in list_of_users]))
 
-
+    # Get all admin events
+    admin_events = AdminEvents(JwtToken(response.access_token()))
+    list_of_admin_events = admin_events.get_admin_events(kc)
+    print('\n'.join([str(d) for d in list_of_admin_events]))
