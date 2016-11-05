@@ -25,4 +25,4 @@ class RealmUsers(ApiRequest):
 
     def get_users_summary(self,kc:Keycloak):
         response = self.get_users(kc)
-        return [{'username':u['username'], 'e-mail': u['email'] if 'email' in u else '<empty>', 'id': u['id']} for u in response]
+        return [{'username':u['username'], 'e-mail': u['email'] if 'email' in u else None, 'id': u['id']} for u in response]

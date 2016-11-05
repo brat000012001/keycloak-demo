@@ -4,6 +4,7 @@ from utils import ClientCredentialsApi
 from utils import JwtToken
 from admin.users import RealmUsers
 from admin.events import AdminEvents
+from admin.users import UserEmailVerification
 
 if __name__ == "__main__":
     kc = KeycloakInstance(server='online.stk.com',ssl_required=True)
@@ -37,6 +38,13 @@ if __name__ == "__main__":
     # Get a list of users and display a short summary for each user
     list_of_users = users.get_users_summary(kc)
     print('\n'.join([str(d) for d in list_of_users]))
+
+    # Iterate over the users and send e-mail verification
+    for u in list_of_users:
+        if not u['e-mail'] is None:
+            verify = UserEmailVerification(u['username'], JwtToken(response.access_token()))
+            sent = verify.send_email_verification(kc)
+            print(sent)
 
     # Get all admin events
     admin_events = AdminEvents(JwtToken(response.access_token()))
