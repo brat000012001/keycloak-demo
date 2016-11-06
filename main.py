@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # Iterate over the users and send e-mail verification
     for u in list_of_users:
         if not u['e-mail'] is None:
-            verify = UserEmailVerification(u['username'], JwtToken(response.access_token()))
+            verify = UserEmailVerification(u['id'], JwtToken(response.access_token()))
             sent = verify.send_email_verification(kc)
             print(sent)
 
