@@ -8,6 +8,8 @@ class Keycloak:
         self._ssl_required = ssl_required
         self._root = '/auth'
 
+    def get_token_endpoint(self): raise NotImplementedError()
+
     def realm(self): return self._realm
 
     def root(self): return self._root

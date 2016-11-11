@@ -15,6 +15,21 @@ class ApiRequest:
     def add_parameter(self,name,value):
         self._params.append((name,value))
 
+    def find_parameter(self,name:str):
+        selection = [p for p in self._params if p[0] == name]
+        if len(selection) != 1:
+            return None
+        else:
+            selection[0][1]
+
+    def update_parameter(self,name:str,value:str):
+        for idx,item in enumerate(self._params):
+            if item[1] == name:
+                self._params[idx]=(name,value)
+                break
+
+
+
     def add_header(self, header:HTTPHeader):
         if not isinstance(header,HTTPHeader): raise RuntimeError('header must be of HTTPHeader type')
         self._headers.append(header)
