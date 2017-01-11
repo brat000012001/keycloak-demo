@@ -13,6 +13,7 @@ from datetime import datetime
 from admin.groups import DefaultGroups
 from admin.groups import Groups
 
+KC_HOST = '<kc-host>'
 
 def display_login_response(response: TokenResponse):
     # print the response
@@ -160,7 +161,7 @@ def demo_groups(kc: KeycloakInstance, response: TokenResponse):
 
 
 if __name__ == "__main__":
-    kc = KeycloakInstance(server='online.stk.com', ssl_required=True)
+    kc = KeycloakInstance(server=KC_HOST, ssl_required=True)
 
     # Get OIDC endpoints
     print(kc.get_metadata())
