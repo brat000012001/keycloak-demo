@@ -21,17 +21,17 @@ curl https://keycloakhost:keycloakport/auth/realms/{realm}/.well-known/openid-co
   - Assuming the server is running on online.stk.com:8443, the request is then will be:
 
 ```
-curl https://online.stk.com:8443/auth/realms/master/.well-known/openid-configuration
+curl https://<host>:8443/auth/realms/master/.well-known/openid-configuration
 ```
 
 - Make a note of the token_endpoint property in the json document returned by the previous call, you will need it to request an access token.
 ```
-https://online.stk.com:8443/auth/realms/master/protocol/openid-connect/token
+https://<host>:8443/auth/realms/master/protocol/openid-connect/token
 ```
 
 - Obtain an access token using the value of the token_endpoint:
 ```
-curl https://online.stk.com:8443/auth/realms/master/protocol/openid-connect/token -H "Authorization: Basic Base64(client_id:client_secret)"
+curl https://<host>:8443/auth/realms/master/protocol/openid-connect/token -H "Authorization: Basic Base64(client_id:client_secret)"
 ```
   - the client_id is 'service-account-client'
   - the client_secret is '9e853caa-9956-4505-9299-4dd83bd0069b'
@@ -39,7 +39,7 @@ curl https://online.stk.com:8443/auth/realms/master/protocol/openid-connect/toke
 
 Note: to encode clent_id:client_secret, use base64 package in python and the method 'urlsafe_b64encode(bytes(..., 'ascii'))  
 ```
-curl https://online.stk.com:8443/auth/realms/master/protocol/openid-connect/token -H "Authorization: Basic c2VydmljZS1hY2NvdW50LWNsaWVudDo5ZTg1M2NhYS05OTU2LTQ1MDUtOTI5OS00ZGQ4M2JkMDA2OWI="
+curl https://<host>:8443/auth/realms/master/protocol/openid-connect/token -H "Authorization: Basic c2VydmljZS1hY2NvdW50LWNsaWVudDo5ZTg1M2NhYS05OTU2LTQ1MDUtOTI5OS00ZGQ4M2JkMDA2OWI="
 ```
 The response is an JSON document containing access, refresh and id tokens:
 ```
@@ -56,6 +56,6 @@ The response is an JSON document containing access, refresh and id tokens:
 ```
 - Use the value of the access token to request a list of realm users:
 ```
-curl --insecure https://online.stk.com:8443/auth/admin/realms/master/users -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBSE5nSVVGVGlIQ2sxcS1xV09WbVR3U0x4NFlWRnd4eEIyMkMwVW5KemZvIn0.eyJqdGkiOiI3MWM0MTc0NS1jODExLTQ5NTQtYmVhMS1jMDE1YzZmNWExOTMiLCJleHAiOjE0NzgyNDQzMjEsIm5iZiI6MCwiaWF0IjoxNDc4MjQ0MjYxLCJpc3MiOiJodHRwczovL29ubGluZS5zdGsuY29tOjg0NDMvYXV0aC9yZWFsbXMvbWFzdGVyIiwiYXVkIjoic2VydmljZS1hY2NvdW50LWNsaWVudCIsInN1YiI6IjRlMDU4ZGNlLTU0NDEtNGQyNS05YTM2LTdhNTFjMmEzMTBlZCIsInR5cCI6IkJlYXJlciIsImF6cCI6InNlcnZpY2UtYWNjb3VudC1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiI0ZmNkODZlYi0yZjdlLTQwYTYtYTY2MS1kMjBiMWE4MTE5N2YiLCJhY3IiOiIxIiwiY2xpZW50X3Nlc3Npb24iOiJkYzFkZWRjNC0zMmQ5LTRiMzEtODljMi1iYmMwZTJjNzM2YjgiLCJhbGxvd2VkLW9yaWdpbnMiOlsiKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJzZXJ2aWNlLWFjY291bnQtY2xpZW50Ijp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwiY2xpZW50SWQiOiJzZXJ2aWNlLWFjY291bnQtY2xpZW50IiwiY2xpZW50SG9zdCI6IjEyNy4wLjAuMSIsIm5hbWUiOiIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtc2VydmljZS1hY2NvdW50LWNsaWVudCIsImNsaWVudEFkZHJlc3MiOiIxMjcuMC4wLjEiLCJlbWFpbCI6InNlcnZpY2UtYWNjb3VudC1zZXJ2aWNlLWFjY291bnQtY2xpZW50QHBsYWNlaG9sZGVyLm9yZyJ9.I-7QCqqBfhHqiexr3JteNQw0GhmDglHsOUln2IIQg_5grOlyFFR8l1tDxxg0kPapLbGFqz7FHZ8yTsj6usds-R-ry_ovmxd8jZ3SJ9tfq-GXDHqw1-4ItUV12iWtCH4LFP4rTGhjbNPI2AOA4yorZD7tpl6-bJV-fRkJnBiy75cUpKYXWEIXCClbbGmDBG2fLZx1EK0k43heqwGZZ-IIP1pR-8W6LZB38pesk83rX8iAE2V7VA3sjKm9nLHsYSzd3b27XUO1h-bsojKT6Es67TsAuio_UkGYNkdU_sc0-i_SespP9laLXkp2RUSxfO1BRoJASXX7tc6DNOPQFdbQKA'
+curl --insecure https://<host>:8443/auth/admin/realms/master/users -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBSE5nSVVGVGlIQ2sxcS1xV09WbVR3U0x4NFlWRnd4eEIyMkMwVW5KemZvIn0.eyJqdGkiOiI3MWM0MTc0NS1jODExLTQ5NTQtYmVhMS1jMDE1YzZmNWExOTMiLCJleHAiOjE0NzgyNDQzMjEsIm5iZiI6MCwiaWF0IjoxNDc4MjQ0MjYxLCJpc3MiOiJodHRwczovL29ubGluZS5zdGsuY29tOjg0NDMvYXV0aC9yZWFsbXMvbWFzdGVyIiwiYXVkIjoic2VydmljZS1hY2NvdW50LWNsaWVudCIsInN1YiI6IjRlMDU4ZGNlLTU0NDEtNGQyNS05YTM2LTdhNTFjMmEzMTBlZCIsInR5cCI6IkJlYXJlciIsImF6cCI6InNlcnZpY2UtYWNjb3VudC1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiI0ZmNkODZlYi0yZjdlLTQwYTYtYTY2MS1kMjBiMWE4MTE5N2YiLCJhY3IiOiIxIiwiY2xpZW50X3Nlc3Npb24iOiJkYzFkZWRjNC0zMmQ5LTRiMzEtODljMi1iYmMwZTJjNzM2YjgiLCJhbGxvd2VkLW9yaWdpbnMiOlsiKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJzZXJ2aWNlLWFjY291bnQtY2xpZW50Ijp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwiY2xpZW50SWQiOiJzZXJ2aWNlLWFjY291bnQtY2xpZW50IiwiY2xpZW50SG9zdCI6IjEyNy4wLjAuMSIsIm5hbWUiOiIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtc2VydmljZS1hY2NvdW50LWNsaWVudCIsImNsaWVudEFkZHJlc3MiOiIxMjcuMC4wLjEiLCJlbWFpbCI6InNlcnZpY2UtYWNjb3VudC1zZXJ2aWNlLWFjY291bnQtY2xpZW50QHBsYWNlaG9sZGVyLm9yZyJ9.I-7QCqqBfhHqiexr3JteNQw0GhmDglHsOUln2IIQg_5grOlyFFR8l1tDxxg0kPapLbGFqz7FHZ8yTsj6usds-R-ry_ovmxd8jZ3SJ9tfq-GXDHqw1-4ItUV12iWtCH4LFP4rTGhjbNPI2AOA4yorZD7tpl6-bJV-fRkJnBiy75cUpKYXWEIXCClbbGmDBG2fLZx1EK0k43heqwGZZ-IIP1pR-8W6LZB38pesk83rX8iAE2V7VA3sjKm9nLHsYSzd3b27XUO1h-bsojKT6Es67TsAuio_UkGYNkdU_sc0-i_SespP9laLXkp2RUSxfO1BRoJASXX7tc6DNOPQFdbQKA'
 ```
 
