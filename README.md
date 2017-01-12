@@ -18,7 +18,7 @@ Pre-requisites: an existing service client.
 curl https://keycloakhost:keycloakport/auth/realms/{realm}/.well-known/openid-configuration
 
 ```
-  - Assuming the server is running on online.stk.com:8443, the request is then will be:
+  - Assuming the server is running on <host>:8443, the request is then will be:
 
 ```
 curl https://<host>:8443/auth/realms/master/.well-known/openid-configuration
