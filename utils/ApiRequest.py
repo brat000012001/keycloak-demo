@@ -1,5 +1,6 @@
 import http.client
 import urllib.parse
+import ssl
 
 from .ApiResponse import ApiResponse
 from utils.headers.HTTPHeader import HTTPHeader
@@ -27,8 +28,6 @@ class ApiRequest:
             if item[1] == name:
                 self._params[idx]=(name,value)
                 break
-
-
 
     def add_header(self, header:HTTPHeader):
         if not isinstance(header,HTTPHeader): raise RuntimeError('header must be of HTTPHeader type')
@@ -72,7 +71,11 @@ class ApiRequest:
             if url.scheme == 'http':
                 conn = http.client.HTTPSConnection(url.hostname,url.port)
             elif url.scheme == 'https':
-                conn = http.client.HTTPSConnection(url.hostname,url.port)
+                context = ssl.create_default_context()
+                # check_hostname must be turned off before setting changing the verify mode
+                context.check_hostname = False
+                context.verify_mode = ssl.CERT_NONE
+                conn = http.client.HTTPSConnection(url.hostname,url.port,context=context)
 
             path = '{0}/{1}'.format(kc.root(),relative_path)
 

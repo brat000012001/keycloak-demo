@@ -13,7 +13,11 @@ from datetime import datetime
 from admin.groups import DefaultGroups
 from admin.groups import Groups
 
-KC_HOST = '<kc-host>'
+KC_REALM = 'singularix01'
+KC_HOST = 'www.singularix.com'
+KC_HOST_HTTPS_PORT = 443
+SERVICE_ACCOUNT = 'service-account-client'
+SERVICE_ACCOUNT_SECRET = 'fec8f2cc-635b-4179-b1d5-8f5db411e72c'
 
 def display_login_response(response: TokenResponse):
     # print the response
@@ -52,10 +56,15 @@ def login_with_client_credentials(kc: KeycloakInstance) -> TokenResponse:
     '''
 
     authentication_method = ClientCredentialsApi(
-        client_id='service-account-client', client_secret='9aa57c07-6d26-4385-ac95-8075303cc825')
+        client_id=SERVICE_ACCOUNT, client_secret=SERVICE_ACCOUNT_SECRET)
+
+    authentication_method.add_offline_access_scope()
 
     response = authentication_method.authenticate(kc)
 
+    print("+-----------------------------------+")
+    print("| LOGGED IN USING CLIENT CREDENTIALS|")
+    print("+-----------------------------------+")
     display_login_response(response)
 
     return response
@@ -63,10 +72,15 @@ def login_with_client_credentials(kc: KeycloakInstance) -> TokenResponse:
 
 def login_with_refresh_token(kc: KeycloakInstance, refresh_token: str) -> TokenResponse:
     refresh_token_auth = RefreshTokenAuthentication(refresh_token,
-                                                    client_id='service-account-client',
-                                                    client_secret='9aa57c07-6d26-4385-ac95-8075303cc825')
+                                                    client_id=SERVICE_ACCOUNT,
+                                                    client_secret=SERVICE_ACCOUNT_SECRET)
     response = refresh_token_auth.refresh(kc)
+
+    print("+-----------------------------------+")
+    print("| REFRESHING THE ACCESS TOKEN       |")
+    print("+-----------------------------------+")
     display_login_response(response)
+
     return response
 
 
@@ -78,9 +92,9 @@ def login_with_user_credentials(kc: KeycloakInstance) -> TokenResponse:
     '''
 
     authentication_method = ResourceOwnerCredentialsAuthentication('owner email',
-                                                                   'owner password', 'service-account-client',
-                                                                   '9aa57c07-6d26-4385-ac95-8075303cc825')
-    authentication_method.set_offline_access(True)
+                                                                   'owner password', SERVICE_ACCOUNT,
+                                                                   SERVICE_ACCOUNT_SECRET)
+    authentication_method.add_offline_access_scope()
 
     response = authentication_method.authenticate(kc)
 
@@ -91,7 +105,9 @@ def login_with_user_credentials(kc: KeycloakInstance) -> TokenResponse:
 
 def demo_protection_api(kc: KeycloakInstance, response: TokenResponse):
     # Demo the protection API
-    print('\nRequesting protected resources using the Protection API')
+    print("+---------------------------------------------------------+")
+    print("| Requesting protected resources using the Protection API |")
+    print("+---------------------------------------------------------+")
     protection = ProtectionEndpoint(JwtToken(response.access_token()))
     try:
         print(protection.get_resource_list(kc))
@@ -103,7 +119,9 @@ def demo_protection_api(kc: KeycloakInstance, response: TokenResponse):
 
 def demo_entitlement_api(kc: KeycloakInstance, response: TokenResponse):
     try:
-        print('\nRequesting entitlements using Entitlement API')
+        print("+---------------------------------------------------------+")
+        print("| Requesting entitlements using Entitlement API           |")
+        print("+---------------------------------------------------------+")
         entitlement = EntitlementEndpoint(JwtToken(response.access_token()))
         print(entitlement.get_entitlements(kc, 'service-account-client'))
     except RuntimeError as e:
@@ -124,6 +142,9 @@ def demo_get_list_of_users_api(kc: KeycloakInstance, response: TokenResponse):
     '''
     users = RealmUsers(JwtToken(response.access_token()))
 
+    print("+-------------------------------+")
+    print("| GETTING A LIST OF REALM USERS |")
+    print("+-------------------------------+")
     # Get a list of users and display a short summary for each user
     list_of_users = users.get_users(kc)
     print('\n'.join([str(d) for d in list_of_users]))
@@ -137,6 +158,9 @@ def demo_get_list_of_users_api(kc: KeycloakInstance, response: TokenResponse):
 
 
 def demo_admin_events_api(kc: KeycloakInstance, response: TokenResponse):
+    print("+-------------------------------+")
+    print("| GETTING A LIST OF ADMIN EVENTS|")
+    print("+-------------------------------+")
     # Get all admin events
     admin_events = AdminEvents(JwtToken(response.access_token()))
     try:
@@ -161,14 +185,14 @@ def demo_groups(kc: KeycloakInstance, response: TokenResponse):
 
 
 if __name__ == "__main__":
-    kc = KeycloakInstance(server=KC_HOST, ssl_required=True)
+    kc = KeycloakInstance(server=KC_HOST, https_port=KC_HOST_HTTPS_PORT, realm=KC_REALM, ssl_required=True)
 
     # Get OIDC endpoints
     print(kc.get_metadata())
 
     # Get access token, id token and refresh token
-    # response = login_with_client_credentials(kc)
-    response = login_with_user_credentials(kc)
+    response = login_with_client_credentials(kc)
+    # response = login_with_user_credentials(kc)
 
     # Demo the Protection API
     demo_protection_api(kc, response)
