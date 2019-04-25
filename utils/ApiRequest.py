@@ -16,6 +16,9 @@ class ApiRequest:
     def add_parameter(self,name,value):
         self._params.append((name,value))
 
+    def clear_parameters(self):
+        self._params = []
+
     def find_parameter(self,name:str):
         selection = [p for p in self._params if p[0] == name]
         if len(selection) != 1:
@@ -50,6 +53,10 @@ class ApiRequest:
         method = 'GET'
         return self._connect(kc,self._build_params(),self._build_headers(),method,relative_path)
 
+    def delete(self, kc:Keycloak, relative_path:str):
+        method = 'DELETE'
+        return self._connect(kc,self._build_params(),self._build_headers(),method,relative_path)
+
     def put(self, kc:Keycloak, relative_path:str):
         method = 'PUT'
         return self._connect(kc,self._build_params(),self._build_headers(),method,relative_path)
@@ -78,6 +85,7 @@ class ApiRequest:
                 conn = http.client.HTTPSConnection(url.hostname,url.port,context=context)
 
             path = '{0}/{1}'.format(kc.root(),relative_path)
+            #print(path)
 
             #print('scheme:{0}\nhost:{1}\nport:{2}\npath:{3}'.format(url.scheme,url.hostname,url.port,path))
             conn.request(method,path,_params,headers)

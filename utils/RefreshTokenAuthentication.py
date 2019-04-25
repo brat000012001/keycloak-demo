@@ -22,6 +22,6 @@ class RefreshTokenAuthentication(ApiRequest):
 
     def refresh(self,kc:Keycloak):
         response = self.execute(kc)
-        if response.status() / 100 != 2:
+        if int(response.status() / 100) != 2:
             raise RuntimeError('Invalid response {0}'.format(response))
         return TokenResponse(response.data())
