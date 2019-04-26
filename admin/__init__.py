@@ -5,3 +5,7 @@ from .authorization import ProtectionEndpoint
 from .authorization import EntitlementEndpoint
 from .groups import DefaultGroups
 from .groups import Groups
+from .clients import RealmClients
+from .clients import RealmClient
+from .roles import RealmClientRole
+from .rolemappings import RealmUserRoleMappings

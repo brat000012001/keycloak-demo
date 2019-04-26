@@ -13,6 +13,7 @@ class RealmUsers(ApiRequest):
     '''
     def __init__(self, access_token: JwtToken):
         super(RealmUsers,self).__init__('get realm users')
+        self._access_token = access_token
         self.add_header(BearerTokenAuthorizationHeader(access_token.token()))
         self._max = 100000
 
@@ -52,6 +53,17 @@ class RealmUsers(ApiRequest):
         response = self.delete(kc, "admin/realms/{}/users/{}".format(kc.realm(), userid))
         if int(response.status() / 100) != 2:
             raise RuntimeError('Invalid response {0}'.format(response))
+
+    def update_user(self, userid:str, kc:Keycloak):
+        """ Update the user. RuntimeError is thrown if the operation failed
+
+        :param userid: a unique user identifier
+        :param kc: a Keycloak instance that includes the user's realm
+        :return: None
+        """
+        response = self.put(kc, "admin/realms/{}/users/{}".format(kc.realm(), userid))
+        if int(response.status() / 100) != 2:
+            raise RuntimeError('Invalid response {}'.format(response))
 
     def get_users_summary(self,kc:Keycloak):
         response = self.get_users(kc)

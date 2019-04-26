@@ -6,3 +6,4 @@ from .JwtToken import JwtToken
 from .OpenIDConnectMetadata import OpenIDConnectMetadata
 from .KeycloakInstance import KeycloakInstance
 from .RefreshTokenAuthentication import RefreshTokenAuthentication
+from .Prompt import Prompt

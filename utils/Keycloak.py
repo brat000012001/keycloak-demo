@@ -26,3 +26,11 @@ class Keycloak:
             port = self._https_port
 
         return '{0}://{1}:{2}'.format(protocol, self._server, port)
+
+    @property
+    def server(self):
+        return self._server
+
+    @property
+    def https_port(self):
+        return self._https_port

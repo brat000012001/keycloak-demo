@@ -68,7 +68,9 @@ class ApiRequest:
 		specified parameters and the headers
 		'''
         _params = urllib.parse.urlencode(params)
+        return self._connect_(kc, _params, headers, method, relative_path)
 
+    def _connect_(self, kc: Keycloak, body: str, headers: dict, method: str, relative_path: str):
         #print(_params)
         #print(headers)
 
@@ -85,10 +87,10 @@ class ApiRequest:
                 conn = http.client.HTTPSConnection(url.hostname,url.port,context=context)
 
             path = '{0}/{1}'.format(kc.root(),relative_path)
-            #print(path)
+            # print(path)
 
             #print('scheme:{0}\nhost:{1}\nport:{2}\npath:{3}'.format(url.scheme,url.hostname,url.port,path))
-            conn.request(method,path,_params,headers)
+            conn.request(method=method, url=path, body=body, headers=headers)
 
             response = conn.getresponse()
 
